@@ -5,18 +5,12 @@ public class Main {
         ApplicationFrame applicationFrame = new ApplicationFrame();
 
         //menu (select options, load game)
-        int gridSize = 3;
+        GameController.BoardSize boardSize = GameController.BoardSize.MEDIUM;
         GameController.Difficulty difficulty = GameController.Difficulty.NORMAL;
 
-        GameController gameController = new GameController(gridSize, difficulty);
+        GameController gameController = new GameController(boardSize, difficulty);
         gameController.newGame();
         applicationFrame.add(gameController.getPanel());
         applicationFrame.pack();
     }
-
-    /*
-     main game control
-     display menu and board
-     */
-
 }

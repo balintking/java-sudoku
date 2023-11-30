@@ -1,5 +1,7 @@
 package sudoku;
 
+import sudoku.GameController.BoardSize;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,21 +9,21 @@ import java.util.List;
 model of the board
  */
 public class GameBoardModel {
-    private int gridSize;
+    private BoardSize boardSize;
 
     /**
      * 2-dimensional ArrayList, where the cells are stored
      */
     private ArrayList<ArrayList<Cell>> board;
 
-    public GameBoardModel(int gridSize) {
-        this.gridSize = gridSize;
+    public GameBoardModel(BoardSize boardSize) {
+        this.boardSize = boardSize;
         board = new ArrayList<>();
 
         //fills the board with blank cells
-        for (int r = 1; r <= gridSize; r++) {
+        for (int r = 1; r <= boardSize.gridSize; r++) {
             ArrayList<Cell> row = new ArrayList<>();
-            for (int c = 1; c <= gridSize; c++) {
+            for (int c = 1; c <= boardSize.gridSize; c++) {
                 Cell cell = new Cell(0, false);
                 row.add(cell);
             }
@@ -47,8 +49,8 @@ public class GameBoardModel {
     }
 
     /**
-     * Returns the cells in one list row-by-row
-     * @return
+     * Returns the cells row-by-row in one list
+     * @return The array containing all cells
      */
     public List<Cell> getCells() {
         ArrayList<Cell> cells = new ArrayList<>();

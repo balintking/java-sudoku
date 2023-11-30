@@ -1,5 +1,7 @@
 package sudoku;
 
+import sudoku.GameController.BoardSize;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -8,11 +10,11 @@ import java.util.ArrayList;
 displays the board
  */
 public class GameBoardPanel extends JPanel {
-    private int gridSize;
+    private BoardSize boardSize;
     private GameBoardModel model;
 
-    public GameBoardPanel(int gridSize, GameBoardModel model) {
-        this.gridSize = gridSize;
+    public GameBoardPanel(BoardSize boardSize, GameBoardModel model) {
+        this.boardSize = boardSize;
         this.model = model;
 
         ArrayList<Cell> cells = (ArrayList<Cell>) model.getCells();
@@ -21,6 +23,6 @@ public class GameBoardPanel extends JPanel {
             this.add(cell);
         }
 
-        this.setLayout(new GridLayout(gridSize, gridSize));
+        this.setLayout(new GridLayout(boardSize.gridSize, boardSize.gridSize));
     }
 }

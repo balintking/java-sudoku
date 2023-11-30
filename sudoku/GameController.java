@@ -4,18 +4,36 @@ package sudoku;
  * Controller class responsible for the game logic
  */
 public class GameController {
-    private int gridSize;
+    private BoardSize boardSize;
     private Difficulty difficulty;
 
     private GameBoardModel model;
     private GameBoardPanel panel;
 
+    /**
+     * Constants of different board sizes
+     */
+    public enum BoardSize {
+        SMALL(4, 2), MEDIUM(9, 3), LARGE(16, 4);
+
+        int gridSize;
+        int boxSize;
+
+        BoardSize(int gridSize, int boxSize) {
+            this.gridSize = gridSize;
+            this.boxSize = boxSize;
+        }
+    }
+
+    /**
+     * Constants of difficulty levels
+     */
     public enum Difficulty {
         EASY, NORMAL, HARD
     }
 
-    public GameController(int gridSize, Difficulty difficulty) {
-        this.gridSize = gridSize;
+    public GameController(BoardSize boardSize, Difficulty difficulty) {
+        this.boardSize = boardSize;
         this.difficulty = difficulty;
     }
 
@@ -24,7 +42,7 @@ public class GameController {
     }
 
     public void newGame() {
-        model = new GameBoardModel(gridSize);
+        model = new GameBoardModel(boardSize);
         //load cells
         model.addCell(1, 1, new Cell(1, true));
         model.addCell(1, 2, new Cell(2, true));
@@ -36,7 +54,7 @@ public class GameController {
         model.addCell(3, 2, new Cell(8, true));
         model.addCell(3, 3, new Cell(9, true));
 
-        panel = new GameBoardPanel(gridSize, model);
+        panel = new GameBoardPanel(boardSize, model);
     }
 
     /*
