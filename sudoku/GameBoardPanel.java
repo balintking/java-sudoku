@@ -17,12 +17,14 @@ public class GameBoardPanel extends JPanel {
         this.boardSize = boardSize;
         this.model = model;
 
+        this.setLayout(new GridLayout(boardSize.gridSize, boardSize.gridSize));
+    }
+
+    public void addCells() {
         ArrayList<Cell> cells = (ArrayList<Cell>) model.getCells();
 
         for (Cell cell : cells) {
             this.add(cell);
         }
-
-        this.setLayout(new GridLayout(boardSize.gridSize, boardSize.gridSize));
     }
 }

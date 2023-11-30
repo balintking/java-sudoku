@@ -1,6 +1,6 @@
 package sudoku;
 
-public class Main {
+public class SudokuGame {
     public static void main(String[] args) {
         ApplicationFrame applicationFrame = new ApplicationFrame();
 

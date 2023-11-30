@@ -5,8 +5,8 @@ import sudoku.GameController.BoardSize;
 import java.util.ArrayList;
 import java.util.List;
 
-/*
-model of the board
+/**
+ * Model storing the actual state of the board
  */
 public class GameBoardModel {
     private BoardSize boardSize;
@@ -32,16 +32,16 @@ public class GameBoardModel {
     }
 
     /**
-     * Adds new cell to a specified position
+     * Sets the cell in a specified position to the specified cell
      *
-     * @param row - row at which the cell is to be inserted
-     * @param col - column at which the cell is to be inserted
-     * @param cell - Cell to be inserted
+     * @param row Row at which the cell is to be set
+     * @param col Column at which the cell is to be set
+     * @param cell Cell to be set
      */
-    public void addCell(int row, int col, Cell cell) {
-        ArrayList<Cell> selectedRow = board.get(row - 1);
-        selectedRow.set(col - 1, cell);
-        board.set(row - 1, selectedRow);
+    public void setCell(int row, int col, Cell cell) {
+        ArrayList<Cell> selectedRow = board.get(row);
+        selectedRow.set(col, cell);
+        board.set(row, selectedRow);
     }
 
     public List<ArrayList<Cell>> getBoard() {
@@ -59,5 +59,81 @@ public class GameBoardModel {
             cells.addAll(row);
         }
         return cells;
+    }
+
+    /**
+     * Prints the current state of the model to the console (for developer purposes only)
+     */
+    public void print() {
+        for (int row = 0; row < boardSize.gridSize; row++) {
+            ArrayList<Cell> currentRow = board.get(row);
+            for (int col = 0; col < boardSize.gridSize; col++) {
+                System.out.print(currentRow.get(col).getValue() + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    /**
+     * Returns the value of the cell at the specified position
+     * @param row Row of the cell
+     * @param col Column of the cell
+     * @return The value of the cell
+     */
+    public int getCellValue(int row, int col) {
+        return board.get(row).get(col).getValue();
+    }
+
+    /**
+     * Checks if the given value is present in the row
+     * @param row Selected row
+     * @param value Value to be checked
+     * @return True if it is present, otherwise false
+     */
+    public boolean isValueInRow(int row, int value) {
+        ArrayList<Cell> selectedRow = board.get(row);
+        for (int col = 0; col < boardSize.gridSize; col++) {
+            if (selectedRow.get(col).getValue() == value) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Checks if the given value is present in the column
+     * @param col Selected column
+     * @param value Value to be checked
+     * @return True if it is present, otherwise false
+     */
+    public boolean isValueInColumn(int col, int value) {
+        for (int row = 0; row < boardSize.gridSize; row++) {
+            ArrayList<Cell> currentRow = board.get(row);
+            if (currentRow.get(col).getValue() == value) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Checks if the given value is present in the box
+     * @param row Starting row of the box
+     * @param col Starting column of the box
+     * @param value Value to be checked
+     * @return True if it is present, otherwise false
+     */
+    public boolean isValueInBox(int row, int col, int value) {
+        int localBoxRow = row - (row % boardSize.boxSize);
+        int localBoxCol = col - (col % boardSize.boxSize);
+
+        for (int i = localBoxRow; i < localBoxRow + boardSize.boxSize; i++) {
+            for (int j = localBoxCol; j < localBoxCol + boardSize.boxSize; j++) {
+                if (getCellValue(i, j) == value) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
