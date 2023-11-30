@@ -20,10 +20,12 @@ public class Cell extends JTextField {
 
     /**
      * Constructor for Cell
+     *
      * @param value The value stored in the cell
      * @param isGiven Tells if the value of the cell is given, and so that it can not be edited
      */
     public Cell(int value, boolean isGiven) {
+        super(value == 0 ? "" : Integer.toString(value), 1);
         this.value = value;
         this.isGiven = isGiven;
     }
