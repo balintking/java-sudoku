@@ -32,6 +32,37 @@ public class GameBoardModel {
     }
 
     /**
+     * Copy Constructor
+     * @param board2 The board to copy
+     */
+    public GameBoardModel(GameBoardModel board2) {
+        this.boardSize = board2.boardSize;
+        this.board = new ArrayList<>();
+
+        for (int row = 0; row < boardSize.gridSize; row++) {
+            ArrayList<Cell> currentRow = board2.board.get(row);
+            ArrayList<Cell> newRow = new ArrayList<>();
+
+            for (int col = 0; col < boardSize.gridSize; col++) {
+                Cell currentCell = currentRow.get(col);
+
+                newRow.add(currentCell);
+            }
+            board.add(newRow);
+        }
+    }
+
+    /**
+     * Returns the cell at the specified position
+     * @param row Row of the cell
+     * @param col Column of the cell
+     * @return The cell
+     */
+    public Cell getCell(int row, int col) {
+        return board.get(row).get(col);
+    }
+
+    /**
      * Sets the cell in a specified position to the specified cell
      *
      * @param row Row at which the cell is to be set
@@ -72,16 +103,6 @@ public class GameBoardModel {
             }
             System.out.println();
         }
-    }
-
-    /**
-     * Returns the value of the cell at the specified position
-     * @param row Row of the cell
-     * @param col Column of the cell
-     * @return The value of the cell
-     */
-    public int getCellValue(int row, int col) {
-        return board.get(row).get(col).getValue();
     }
 
     /**
@@ -129,11 +150,24 @@ public class GameBoardModel {
 
         for (int i = localBoxRow; i < localBoxRow + boardSize.boxSize; i++) {
             for (int j = localBoxCol; j < localBoxCol + boardSize.boxSize; j++) {
-                if (getCellValue(i, j) == value) {
+                if (getCell(i, j).getValue() == value) {
                     return true;
                 }
             }
         }
         return false;
+    }
+
+    /**
+     * Checks if the given value can be placed at the specified index
+     * @param row Selected row
+     * @param col Selected column
+     * @param value Value to be checked
+     * @return True if the placement is valid, otherwise false
+     */
+    public boolean isValidPlacement(int row, int col, int value) {
+        return !isValueInRow(row, value) &&
+                !isValueInColumn(col, value) &&
+                !isValueInBox(row, col, value);
     }
 }

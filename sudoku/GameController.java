@@ -51,36 +51,27 @@ public class GameController {
     }
 
     public void newGame() {
-        //load cells
-//        model.setCell(1, 1, new Cell(1, true));
-//        model.setCell(1, 2, new Cell(2, true));
-//        model.setCell(1, 3, new Cell(3, true));
-//        model.setCell(2, 1, new Cell(4, true));
-//        model.setCell(2, 2, new Cell(5, true));
-//        model.setCell(2, 3, new Cell(6, true));
-//        model.setCell(3, 1, new Cell(7, true));
-//        model.setCell(3, 2, new Cell(8, true));
-//        model.setCell(3, 3, new Cell(9, true));
 
         generateBoard();
-        System.out.println(model.getCells());
         panel.addCells();
     }
 
     /**
      * Generates new board based on the chosen gridSize and difficulty level
      */
-    public void generateBoard() {
+    private void generateBoard() {
         fillDiagonal();
+        solveBoard(model);
+        removeSomeCells(boardSize, difficulty);
     }
 
     /**
-     * Generates random int value between 1 and the specified value
-     * @param num Upper bound (inclusive)
+     * Generates random int value between 0 and the specified value
+     * @param num Upper bound (exclusive)
      * @return Random number
      */
     public static int randomGenerator(int num) {
-        return random.nextInt(num) + 1;
+        return random.nextInt(num);
     }
 
     /**
@@ -105,10 +96,94 @@ public class GameController {
         for (int i = 0; i < boxSize; i++) {
             for (int j = 0; j < boxSize; j++) {
                 do {
-                    value = randomGenerator(boardSize.maxValue);
+                    value = randomGenerator(boardSize.maxValue) + 1;
                 } while (model.isValueInBox(row + i, col + j, value));
                 model.setCell(row + i, col + j, new Cell(value, true));
             }
         }
+    }
+
+    /**
+     * Recursive backtracking algorithm for filling remaining cells
+     */
+    private boolean solveBoard(GameBoardModel board) {
+        for (int row = 0; row < boardSize.gridSize; row++) {
+            for (int col = 0; col < boardSize.gridSize; col++) {
+                if (!board.getCell(row, col).isGiven()) {
+                    for (int tryValue = 1; tryValue <= boardSize.maxValue; tryValue++) {
+                        if (board.isValidPlacement(row, col, tryValue)) {
+                            board.setCell(row, col, new Cell(tryValue, true));
+
+                            if (solveBoard(board)) {
+                                return true;
+                            } else {
+                                board.setCell(row, col, new Cell(0, false));
+                            }
+                        }
+                    }
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Removes some cells from the model considering the board size and the difficulty
+     * @param boardSize Size of the board
+     * @param difficulty Difficulty level
+     */
+    private void removeSomeCells(BoardSize boardSize, Difficulty difficulty) {
+        int cellsToRemove = calculateCellsToRemove(boardSize, difficulty);
+
+        while (cellsToRemove > 0) {
+            int randomRow = random.nextInt(boardSize.gridSize);
+            int randomCol = random.nextInt(boardSize.gridSize);
+
+            while (model.getCell(randomRow, randomCol).getValue() == 0) {
+                randomRow = random.nextInt(boardSize.gridSize);
+                randomCol = random.nextInt(boardSize.gridSize);
+            }
+
+            model.setCell(randomRow, randomCol, new Cell(0, false));
+
+            cellsToRemove--;
+        }
+    }
+
+    /**
+     * Calculates how many cells to remove on the given board size to achieve the specified difficulty level
+     * @param boardSize Size of the board
+     * @param difficulty Difficulty level
+     * @return The number of cells to remove
+     */
+    private int calculateCellsToRemove(BoardSize boardSize, Difficulty difficulty) {
+        int cellsToRemove = 0;
+
+        switch (boardSize) {
+            case SMALL -> {
+                switch (difficulty) {
+                    case EASY -> cellsToRemove = randomGenerator(4) + 8;
+                    case NORMAL -> cellsToRemove = randomGenerator(4) + 4;
+                    case HARD -> cellsToRemove = randomGenerator(4) + 5;
+                }
+            }
+            case MEDIUM -> {
+                switch (difficulty) {
+                    case EASY -> cellsToRemove = randomGenerator(11) + 30;
+                    case NORMAL -> cellsToRemove = randomGenerator(11) + 20;
+                    case HARD -> cellsToRemove = randomGenerator(11) + 15;
+                }
+            }
+            case LARGE -> {
+                switch (difficulty) {
+                    case EASY -> cellsToRemove = randomGenerator(31) + 80;
+                    case NORMAL -> cellsToRemove = randomGenerator(31) + 50;
+                    case HARD -> cellsToRemove = randomGenerator(31) + 40;
+                }
+            }
+        }
+
+        return cellsToRemove;
     }
 }
