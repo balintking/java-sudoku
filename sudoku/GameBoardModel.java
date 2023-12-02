@@ -1,6 +1,6 @@
 package sudoku;
 
-import sudoku.GameController.BoardSize;
+import sudoku.GameController.BoardDimension;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,21 +9,21 @@ import java.util.List;
  * Model storing the actual state of the board
  */
 public class GameBoardModel {
-    private BoardSize boardSize;
+    private BoardDimension boardDimension;
 
     /**
      * 2-dimensional ArrayList, where the cells are stored
      */
     private ArrayList<ArrayList<Cell>> board;
 
-    public GameBoardModel(BoardSize boardSize) {
-        this.boardSize = boardSize;
+    public GameBoardModel(BoardDimension boardDimension) {
+        this.boardDimension = boardDimension;
         board = new ArrayList<>();
 
         //fills the board with blank cells
-        for (int r = 1; r <= boardSize.gridSize; r++) {
+        for (int r = 1; r <= boardDimension.gridSize; r++) {
             ArrayList<Cell> row = new ArrayList<>();
-            for (int c = 1; c <= boardSize.gridSize; c++) {
+            for (int c = 1; c <= boardDimension.gridSize; c++) {
                 Cell cell = new Cell(0, false);
                 row.add(cell);
             }
@@ -36,14 +36,14 @@ public class GameBoardModel {
      * @param board2 The board to copy
      */
     public GameBoardModel(GameBoardModel board2) {
-        this.boardSize = board2.boardSize;
+        this.boardDimension = board2.boardDimension;
         this.board = new ArrayList<>();
 
-        for (int row = 0; row < boardSize.gridSize; row++) {
+        for (int row = 0; row < boardDimension.gridSize; row++) {
             ArrayList<Cell> currentRow = board2.board.get(row);
             ArrayList<Cell> newRow = new ArrayList<>();
 
-            for (int col = 0; col < boardSize.gridSize; col++) {
+            for (int col = 0; col < boardDimension.gridSize; col++) {
                 Cell currentCell = currentRow.get(col);
 
                 newRow.add(currentCell);
@@ -96,9 +96,9 @@ public class GameBoardModel {
      * Prints the current state of the model to the console (for developer purposes only)
      */
     public void print() {
-        for (int row = 0; row < boardSize.gridSize; row++) {
+        for (int row = 0; row < boardDimension.gridSize; row++) {
             ArrayList<Cell> currentRow = board.get(row);
-            for (int col = 0; col < boardSize.gridSize; col++) {
+            for (int col = 0; col < boardDimension.gridSize; col++) {
                 System.out.print(currentRow.get(col).getValue() + " ");
             }
             System.out.println();
@@ -113,7 +113,7 @@ public class GameBoardModel {
      */
     public boolean isValueInRow(int row, int value) {
         ArrayList<Cell> selectedRow = board.get(row);
-        for (int col = 0; col < boardSize.gridSize; col++) {
+        for (int col = 0; col < boardDimension.gridSize; col++) {
             if (selectedRow.get(col).getValue() == value) {
                 return true;
             }
@@ -128,7 +128,7 @@ public class GameBoardModel {
      * @return True if it is present, otherwise false
      */
     public boolean isValueInColumn(int col, int value) {
-        for (int row = 0; row < boardSize.gridSize; row++) {
+        for (int row = 0; row < boardDimension.gridSize; row++) {
             ArrayList<Cell> currentRow = board.get(row);
             if (currentRow.get(col).getValue() == value) {
                 return true;
@@ -145,11 +145,11 @@ public class GameBoardModel {
      * @return True if it is present, otherwise false
      */
     public boolean isValueInBox(int row, int col, int value) {
-        int localBoxRow = row - (row % boardSize.boxSize);
-        int localBoxCol = col - (col % boardSize.boxSize);
+        int localBoxRow = row - (row % boardDimension.boxSize);
+        int localBoxCol = col - (col % boardDimension.boxSize);
 
-        for (int i = localBoxRow; i < localBoxRow + boardSize.boxSize; i++) {
-            for (int j = localBoxCol; j < localBoxCol + boardSize.boxSize; j++) {
+        for (int i = localBoxRow; i < localBoxRow + boardDimension.boxSize; i++) {
+            for (int j = localBoxCol; j < localBoxCol + boardDimension.boxSize; j++) {
                 if (getCell(i, j).getValue() == value) {
                     return true;
                 }

@@ -6,7 +6,7 @@ import java.util.Random;
  * Controller class responsible for the game logic
  */
 public class GameController {
-    private final BoardSize boardSize;
+    private final BoardDimension boardDimension;
     private final Difficulty difficulty;
 
     private final GameBoardModel model;
@@ -17,14 +17,14 @@ public class GameController {
     /**
      * Constants for different board sizes
      */
-    public enum BoardSize {
+    public enum BoardDimension {
         SMALL(4, 2), MEDIUM(9, 3), LARGE(16, 4);
 
         int gridSize;
         int boxSize;
         int maxValue;
 
-        BoardSize(int gridSize, int boxSize) {
+        BoardDimension(int gridSize, int boxSize) {
             this.gridSize = gridSize;
             this.boxSize = boxSize;
             this.maxValue = gridSize;
@@ -38,12 +38,12 @@ public class GameController {
         EASY, NORMAL, HARD
     }
 
-    public GameController(BoardSize boardSize, Difficulty difficulty) {
-        this.boardSize = boardSize;
+    public GameController(BoardDimension boardDimension, Difficulty difficulty) {
+        this.boardDimension = boardDimension;
         this.difficulty = difficulty;
 
-        model = new GameBoardModel(boardSize);
-        panel = new GameBoardPanel(boardSize, model);
+        model = new GameBoardModel(boardDimension);
+        panel = new GameBoardPanel(boardDimension);
     }
 
     public GameBoardPanel getPanel() {
@@ -53,7 +53,7 @@ public class GameController {
     public void newGame() {
 
         generateBoard();
-        panel.addCells();
+        panel.addCells(model);
     }
 
     /**
@@ -62,7 +62,7 @@ public class GameController {
     private void generateBoard() {
         fillDiagonal();
         solveBoard(model);
-        removeSomeCells(boardSize, difficulty);
+        removeSomeCells(boardDimension, difficulty);
     }
 
     /**
@@ -78,10 +78,10 @@ public class GameController {
      * Fills the gridSize number of diagonal (boxSize x boxSize) boxes
      */
     private void fillDiagonal() {
-        for (int i = 0; i < boardSize.gridSize; i = i + boardSize.boxSize)
+        for (int i = 0; i < boardDimension.gridSize; i = i + boardDimension.boxSize)
 
             // diagonal box start coordinates i==j
-            fillBox(i, i, boardSize.boxSize);
+            fillBox(i, i, boardDimension.boxSize);
     }
 
     /**
@@ -96,7 +96,7 @@ public class GameController {
         for (int i = 0; i < boxSize; i++) {
             for (int j = 0; j < boxSize; j++) {
                 do {
-                    value = randomGenerator(boardSize.maxValue) + 1;
+                    value = randomGenerator(boardDimension.maxValue) + 1;
                 } while (model.isValueInBox(row + i, col + j, value));
                 model.setCell(row + i, col + j, new Cell(value, true));
             }
@@ -107,10 +107,10 @@ public class GameController {
      * Recursive backtracking algorithm for filling remaining cells
      */
     private boolean solveBoard(GameBoardModel board) {
-        for (int row = 0; row < boardSize.gridSize; row++) {
-            for (int col = 0; col < boardSize.gridSize; col++) {
+        for (int row = 0; row < boardDimension.gridSize; row++) {
+            for (int col = 0; col < boardDimension.gridSize; col++) {
                 if (!board.getCell(row, col).isGiven()) {
-                    for (int tryValue = 1; tryValue <= boardSize.maxValue; tryValue++) {
+                    for (int tryValue = 1; tryValue <= boardDimension.maxValue; tryValue++) {
                         if (board.isValidPlacement(row, col, tryValue)) {
                             board.setCell(row, col, new Cell(tryValue, true));
 
@@ -130,19 +130,20 @@ public class GameController {
 
     /**
      * Removes some cells from the model considering the board size and the difficulty
-     * @param boardSize Size of the board
+     * @param boardDimension Size of the board
      * @param difficulty Difficulty level
      */
-    private void removeSomeCells(BoardSize boardSize, Difficulty difficulty) {
-        int cellsToRemove = calculateCellsToRemove(boardSize, difficulty);
+    private void removeSomeCells(BoardDimension boardDimension, Difficulty difficulty) {
+        int cellsToRemove = calculateCellsToRemove(boardDimension, difficulty);
+        System.out.println(cellsToRemove);
 
         while (cellsToRemove > 0) {
-            int randomRow = random.nextInt(boardSize.gridSize);
-            int randomCol = random.nextInt(boardSize.gridSize);
+            int randomRow = random.nextInt(boardDimension.gridSize);
+            int randomCol = random.nextInt(boardDimension.gridSize);
 
-            while (model.getCell(randomRow, randomCol).getValue() == 0) {
-                randomRow = random.nextInt(boardSize.gridSize);
-                randomCol = random.nextInt(boardSize.gridSize);
+            while (!model.getCell(randomRow, randomCol).isGiven()) {
+                randomRow = random.nextInt(boardDimension.gridSize);
+                randomCol = random.nextInt(boardDimension.gridSize);
             }
 
             model.setCell(randomRow, randomCol, new Cell(0, false));
@@ -153,14 +154,14 @@ public class GameController {
 
     /**
      * Calculates how many cells to remove on the given board size to achieve the specified difficulty level
-     * @param boardSize Size of the board
+     * @param boardDimension Size of the board
      * @param difficulty Difficulty level
      * @return The number of cells to remove
      */
-    private int calculateCellsToRemove(BoardSize boardSize, Difficulty difficulty) {
+    private int calculateCellsToRemove(BoardDimension boardDimension, Difficulty difficulty) {
         int cellsToRemove = 0;
 
-        switch (boardSize) {
+        switch (boardDimension) {
             case SMALL -> {
                 switch (difficulty) {
                     case EASY -> cellsToRemove = randomGenerator(4) + 8;

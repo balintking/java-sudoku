@@ -1,6 +1,7 @@
 package sudoku;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * Represents a single cell on the GameBoard
@@ -17,6 +18,8 @@ public class Cell extends JTextField {
      */
     private boolean isGiven;
 
+    private static final int GIVEN_COLOR = 0xf2f2fc;
+
 
     /**
      * Constructor for Cell
@@ -25,9 +28,21 @@ public class Cell extends JTextField {
      * @param isGiven Tells if the value of the cell is given, and so that it can not be edited
      */
     public Cell(int value, boolean isGiven) {
-        super(value == 0 ? "" : Integer.toString(value), 1);
+        super(isGiven ? Integer.toString(value): "", 1);
         this.value = value;
         this.isGiven = isGiven;
+        setHorizontalAlignment(SwingConstants.CENTER);
+        setPreferredSize(new Dimension(30, 30));
+        setBorder(BorderFactory.createStrokeBorder(new BasicStroke(0.5f)));
+
+        Font  font  = new Font(Font.SANS_SERIF,  Font.PLAIN, 15);
+        setFont(font);
+
+        if (isGiven()) {
+            setEditable(false);
+            setFont(getFont().deriveFont(Font.BOLD));
+            setBackground(new Color(GIVEN_COLOR));
+        }
     }
 
 
