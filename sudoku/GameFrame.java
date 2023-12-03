@@ -3,16 +3,15 @@ package sudoku;
 import sudoku.GameController.BoardDimension;
 import sudoku.GameController.Difficulty;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static java.lang.System.exit;
@@ -20,14 +19,17 @@ import static java.lang.System.exit;
 public class GameFrame extends JFrame implements ActionListener {
     BoardDimension boardDimension;
     Difficulty difficulty;
-    private JMenuBar menuBar;
-    private JMenu fileMenu;
-    private JMenu gameMenu;
     private JMenuItem saveMenuItem;
     private JMenuItem loadMenuItem;
     private JMenuItem newGameMenuItem;
     JButton checkButton;
 
+    /**
+     * Constructor that initializes the frame
+     * @param boardDimension Dimension of the game board
+     * @param difficulty Level of Difficulty
+     * @param panel Game board panel to be added to this frame
+     */
     public GameFrame(BoardDimension boardDimension, Difficulty difficulty, GameBoardPanel panel) {
         super("Sudoku");
 
@@ -46,6 +48,10 @@ public class GameFrame extends JFrame implements ActionListener {
         pack();
     }
 
+    /**
+     * Adds the components to the frame
+     * @param panel Game board panel to be added
+     */
     private void initComponents(GameBoardPanel panel) {
         buildMenuBar();
         add(panel);
@@ -70,10 +76,10 @@ public class GameFrame extends JFrame implements ActionListener {
      * Builds the menu bar on top of the frame
      */
     private void buildMenuBar() {
-        menuBar = new JMenuBar();
+        JMenuBar menuBar = new JMenuBar();
 
         //File
-        fileMenu = new JMenu("File");
+        JMenu fileMenu = new JMenu("File");
 
         saveMenuItem = new JMenuItem("Save Game");
         saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.META_DOWN_MASK));
@@ -89,7 +95,7 @@ public class GameFrame extends JFrame implements ActionListener {
 
 
         //Game
-        gameMenu = new JMenu("Game");
+        JMenu gameMenu = new JMenu("Game");
 
         newGameMenuItem = new JMenuItem("New Game");
         newGameMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.META_DOWN_MASK));
@@ -102,65 +108,79 @@ public class GameFrame extends JFrame implements ActionListener {
         this.setJMenuBar(menuBar);
     }
 
+    /**
+     * Action handling to the game frame
+     * @param e the event to be processed
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() instanceof JMenuItem item) {
+            //save
             if (item.equals(saveMenuItem)) {
-                JFileChooser fileChooser = new JFileChooser();
-                File saveDir = null;
-                try {
-                    saveDir = Files.createDirectories(Paths.get("./savefiles")).toFile();
-                } catch (IOException ex) {
-                    System.out.println("Save unsuccessful: IOException");
-                }
-                fileChooser.setCurrentDirectory(saveDir);
+                JFileChooser fileChooser = initFileChooser();
                 int response = fileChooser.showSaveDialog(null);
 
                 if (response == JFileChooser.APPROVE_OPTION) {
                     File file = new File(fileChooser.getSelectedFile().getAbsolutePath());
                     SudokuGame.saveGame(file);
                 }
+            //load
             }else if (item.equals(loadMenuItem)) {
-                JFileChooser fileChooser = new JFileChooser();
-                File saveDir = null;
-                try {
-                    saveDir = Files.createDirectories(Paths.get("./savefiles")).toFile();
-                } catch (IOException ex) {
-                    System.out.println("Save unsuccessful: IOException");
-                }
-                fileChooser.setCurrentDirectory(saveDir);
+                JFileChooser fileChooser =  initFileChooser();
                 int response = fileChooser.showOpenDialog(null);
 
                 if (response == JFileChooser.APPROVE_OPTION) {
                     File file = new File(fileChooser.getSelectedFile().getAbsolutePath());
                     SudokuGame.loadGame(file);
                 }
+            //new game
             } else if (item.equals(newGameMenuItem)) {
                 SudokuGame.showMenu();
             }
+        //check solution
         } else if (e.getSource().equals(checkButton)) {
-            switch(SudokuGame.checkSolution()) {
-                case -1 -> {
-                    //Wrong Solution
+            displayDialog();
+        }
+    }
+
+    /**
+     * Initializes File Chooser to the save files directory
+     * @return File chooser
+     */
+    static JFileChooser initFileChooser() {
+        JFileChooser fileChooser = new JFileChooser();
+        File saveDir = null;
+        try {
+            saveDir = Files.createDirectories(Paths.get("./savefiles")).toFile();
+        } catch (IOException ex) {
+            SudokuGame.logger.info("IOException during opening save files directory");
+        }
+        fileChooser.setCurrentDirectory(saveDir);
+        return fileChooser;
+    }
+
+    /**
+     * Displays dialog after checking the given solution
+     */
+    private void displayDialog() {
+        switch(SudokuGame.checkSolution()) {
+            case -1 -> //Wrong Solution
                     JOptionPane.showMessageDialog(null, "Uh-oh! The solution is not valid. Keep refining your Sudoku skills!", "Wrong Solution", JOptionPane.ERROR_MESSAGE);
-                }
-                case 0 -> {
-                    //Incomplete Board
+            case 0 -> //Incomplete Board
                     JOptionPane.showMessageDialog(null, "You have to fill in all cells.", "Incomplete Board", JOptionPane.WARNING_MESSAGE);
-                }
-                case 1 -> {
-                    //Puzzle Solved
-                    int answer = JOptionPane.showConfirmDialog(null, "Victory! The Sudoku puzzle has been triumphantly solved. How about another game?", "Puzzle Solved", JOptionPane.YES_NO_CANCEL_OPTION);
-                    switch (answer) {
-                        case 0 -> //new game
-                                SudokuGame.showMenu();
-                        case 1 -> //exit
-                                exit(0);
-                        default -> { //do nothing
-                        }
+            case 1 -> {
+                //Puzzle Solved
+                int answer = JOptionPane.showConfirmDialog(null, "Victory! The Sudoku puzzle has been triumphantly solved. How about another game?", "Puzzle Solved", JOptionPane.YES_NO_CANCEL_OPTION);
+                switch (answer) {
+                    case 0 -> //new game
+                            SudokuGame.showMenu();
+                    case 1 -> //exit
+                            exit(0);
+                    default -> { //do nothing
                     }
                 }
             }
+            default -> throw new IllegalStateException("Unexpected value: " + SudokuGame.checkSolution());
         }
     }
 }
