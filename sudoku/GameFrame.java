@@ -6,13 +6,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class GameFrame extends JFrame implements ActionListener {
     private JMenuBar menuBar;
     private JMenu fileMenu;
     private JMenu gameMenu;
-    private JMenuItem loadMenuItem;
     private JMenuItem saveMenuItem;
+    private JMenuItem loadMenuItem;
     private JMenuItem newGameMenuItem;
     public GameFrame(GameBoardPanel panel) {
         super("Sudoku");
@@ -41,15 +45,15 @@ public class GameFrame extends JFrame implements ActionListener {
         //File
         fileMenu = new JMenu("File");
 
-        loadMenuItem = new JMenuItem("Load Game");
-        loadMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, InputEvent.META_DOWN_MASK));
-        loadMenuItem.addActionListener(this);
         saveMenuItem = new JMenuItem("Save Game");
         saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.META_DOWN_MASK));
         saveMenuItem.addActionListener(this);
+        loadMenuItem = new JMenuItem("Load Game");
+        loadMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, InputEvent.META_DOWN_MASK));
+        loadMenuItem.addActionListener(this);
 
-        fileMenu.add(loadMenuItem);
         fileMenu.add(saveMenuItem);
+        fileMenu.add(loadMenuItem);
 
         menuBar.add(fileMenu);
 
@@ -71,12 +75,36 @@ public class GameFrame extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() instanceof JMenuItem item) {
-            if (item.equals(loadMenuItem)) {
-                System.out.println("load");
-                //TODO: implement load file
-            } else if (item.equals(saveMenuItem)) {
-                System.out.println("save");
-                //TODO: implement save file
+            if (item.equals(saveMenuItem)) {
+                JFileChooser fileChooser = new JFileChooser();
+                File saveDir = null;
+                try {
+                    saveDir = Files.createDirectories(Paths.get("./savefiles")).toFile();
+                } catch (IOException ex) {
+                    System.out.println("Save unsuccessful: IOException");
+                }
+                fileChooser.setCurrentDirectory(saveDir);
+                int response = fileChooser.showSaveDialog(null);
+
+                if (response == JFileChooser.APPROVE_OPTION) {
+                    File file = new File(fileChooser.getSelectedFile().getAbsolutePath());
+                    SudokuGame.saveGame(file);
+                }
+            }else if (item.equals(loadMenuItem)) {
+                JFileChooser fileChooser = new JFileChooser();
+                File saveDir = null;
+                try {
+                    saveDir = Files.createDirectories(Paths.get("./savefiles")).toFile();
+                } catch (IOException ex) {
+                    System.out.println("Save unsuccessful: IOException");
+                }
+                fileChooser.setCurrentDirectory(saveDir);
+                int response = fileChooser.showOpenDialog(null);
+
+                if (response == JFileChooser.APPROVE_OPTION) {
+                    File file = new File(fileChooser.getSelectedFile().getAbsolutePath());
+                    SudokuGame.loadGame(file);
+                }
             } else if (item.equals(newGameMenuItem)) {
                 SudokuGame.showMenu();
             }

@@ -1,23 +1,24 @@
 package sudoku;
 
+import java.io.*;
 import java.util.Random;
 
 /**
  * Controller class responsible for the game logic
  */
 public class GameController {
-    private final BoardDimension boardDimension;
-    private final Difficulty difficulty;
+    private BoardDimension boardDimension;
+    private Difficulty difficulty;
 
-    private final GameBoardModel model;
-    private final GameBoardPanel panel;
+    private GameBoardModel model;
+    private GameBoardPanel panel;
 
     private static final Random random = new Random();
 
     /**
      * Constants for different board sizes
      */
-    public enum BoardDimension {
+    public enum BoardDimension implements Serializable {
         SMALL(4, 2), MEDIUM(9, 3), LARGE(16, 4);
 
         int gridSize;
@@ -34,7 +35,7 @@ public class GameController {
     /**
      * Constants for difficulty levels
      */
-    public enum Difficulty {
+    public enum Difficulty implements Serializable {
         EASY, NORMAL, HARD
     }
 
@@ -42,8 +43,25 @@ public class GameController {
         this.boardDimension = boardDimension;
         this.difficulty = difficulty;
 
-        model = new GameBoardModel(boardDimension);
+        model = new GameBoardModel(boardDimension, difficulty);
         panel = new GameBoardPanel(boardDimension);
+    }
+
+    /**
+     * Copy constructor - used for loading saved state
+     * @param model Saved state of the game
+     */
+    public GameController(GameBoardModel model) {
+        this.boardDimension = model.getBoardDimension();
+        this.difficulty = model.getDifficulty();
+
+        this.model = model;
+        this.panel = new GameBoardPanel(boardDimension);
+        panel.addCells(model);
+    }
+
+    public GameBoardModel getModel() {
+        return model;
     }
 
     public GameBoardPanel getPanel() {
@@ -51,7 +69,6 @@ public class GameController {
     }
 
     public void newGame() {
-
         generateBoard();
         panel.addCells(model);
     }

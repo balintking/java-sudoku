@@ -35,6 +35,7 @@ public class GameBoardPanel extends JPanel {
     }
 
     public void addCells(GameBoardModel model) {
+
         ArrayList<ArrayList<Cell>> cells = (ArrayList<ArrayList<Cell>>) model.getBoard();
 
         for (int row = 0; row < boardDimension.gridSize; ++row) {

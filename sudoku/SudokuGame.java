@@ -1,6 +1,10 @@
 package sudoku;
 
+import sudoku.GameController.BoardDimension;
+import sudoku.GameController.Difficulty;
+
 import javax.swing.*;
+import java.io.*;
 
 public class SudokuGame {
     private static JFrame menuFrame;
@@ -13,10 +17,7 @@ public class SudokuGame {
         menuFrame.setVisible(true);
     }
 
-    public static void showGame(GameController.BoardDimension boardDimension, GameController.Difficulty difficulty) {
-        gameController = new GameController(boardDimension, difficulty);
-        gameController.newGame();
-        gameFrame = new GameFrame(gameController.getPanel());
+    public static void showGame() {
         if (menuFrame.isVisible()) {
             menuFrame.setVisible(false);
             gameFrame.setVisible(true);
@@ -27,6 +28,51 @@ public class SudokuGame {
         if (gameFrame.isVisible()) {
             gameFrame.setVisible(false);
             menuFrame.setVisible(true);
+        }
+    }
+
+    public static void newGame(BoardDimension boardDimension, Difficulty difficulty) {
+        gameController = new GameController(boardDimension, difficulty);
+        gameController.newGame();
+        gameFrame = new GameFrame(gameController.getPanel());
+        showGame();
+    }
+
+    public static void loadGame(File file) {
+        GameBoardModel model = null;
+        try (FileInputStream fileInputStream = new FileInputStream(file)) {
+            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+
+            model = (GameBoardModel) objectInputStream.readObject();
+
+        } catch (FileNotFoundException ex) {
+            System.out.println("Load unsuccessful: File not found");
+        } catch (IOException ex) {
+            System.out.println("Load unsuccessful: IOException");
+        } catch (ClassNotFoundException e) {
+            System.out.println("Load unsuccessful: Class not found");
+        }
+
+        if (model != null) {
+            gameController = new GameController(model);
+            gameFrame = new GameFrame(gameController.getPanel());
+            showGame();
+        } else {
+            System.out.println("Load unsuccessful");
+        }
+    }
+
+    public static void saveGame(File file) {
+        try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+
+            objectOutputStream.writeObject(gameController.getModel());
+
+        } catch (FileNotFoundException ex) {
+            System.out.println("Save unsuccessful: File not found");
+        } catch (IOException ex) {
+            System.out.println("Save unsuccessful: IOException");
+            ex.printStackTrace(System.out);
         }
     }
 }

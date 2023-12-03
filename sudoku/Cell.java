@@ -2,11 +2,12 @@ package sudoku;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.Serializable;
 
 /**
  * Represents a single cell on the GameBoard
  */
-public class Cell extends JTextField {
+public class Cell extends JTextField implements Serializable {
 
     /**
      * The value stored in the cell
@@ -20,7 +21,6 @@ public class Cell extends JTextField {
 
     private static final int GIVEN_COLOR = 0xf2f2fc;
 
-
     /**
      * Constructor for Cell
      *
@@ -33,7 +33,7 @@ public class Cell extends JTextField {
         this.isGiven = isGiven;
         setHorizontalAlignment(SwingConstants.CENTER);
         setPreferredSize(new Dimension(30, 30));
-        setBorder(BorderFactory.createStrokeBorder(new BasicStroke(0.5f)));
+        setBorder(BorderFactory.createStrokeBorder(new Stroke(0.5f)));
 
         Font  font  = new Font(Font.SANS_SERIF,  Font.PLAIN, 15);
         setFont(font);
@@ -42,6 +42,12 @@ public class Cell extends JTextField {
             setEditable(false);
             setFont(getFont().deriveFont(Font.BOLD));
             setBackground(new Color(GIVEN_COLOR));
+        }
+    }
+
+    static class Stroke extends java.awt.BasicStroke implements Serializable {
+        public Stroke(float width) {
+            super(width);
         }
     }
 

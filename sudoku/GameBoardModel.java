@@ -2,22 +2,27 @@ package sudoku;
 
 import sudoku.GameController.BoardDimension;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import static sudoku.GameController.*;
 
 /**
  * Model storing the actual state of the board
  */
-public class GameBoardModel {
-    private BoardDimension boardDimension;
+public class GameBoardModel implements Serializable {
+    private final BoardDimension boardDimension;
+    private final Difficulty difficulty;
 
     /**
      * 2-dimensional ArrayList, where the cells are stored
      */
     private ArrayList<ArrayList<Cell>> board;
 
-    public GameBoardModel(BoardDimension boardDimension) {
+    public GameBoardModel(BoardDimension boardDimension, Difficulty difficulty) {
         this.boardDimension = boardDimension;
+        this.difficulty = difficulty;
         board = new ArrayList<>();
 
         //fills the board with blank cells
@@ -33,10 +38,12 @@ public class GameBoardModel {
 
     /**
      * Copy Constructor
-     * @param board2 The board to copy
+     *
+     * @param board2     The board to copy
      */
     public GameBoardModel(GameBoardModel board2) {
         this.boardDimension = board2.boardDimension;
+        this.difficulty = board2.difficulty;
         this.board = new ArrayList<>();
 
         for (int row = 0; row < boardDimension.gridSize; row++) {
@@ -50,6 +57,14 @@ public class GameBoardModel {
             }
             board.add(newRow);
         }
+    }
+
+    public BoardDimension getBoardDimension() {
+        return boardDimension;
+    }
+
+    public Difficulty getDifficulty() {
+        return difficulty;
     }
 
     /**
