@@ -5,18 +5,39 @@ import sudoku.GameController.Difficulty;
 
 import javax.swing.*;
 import java.io.*;
+import java.util.logging.Logger;
 
+/**
+ * Main class
+ */
 public class SudokuGame {
     private static JFrame menuFrame;
     private static JFrame gameFrame;
 
     private static GameController gameController;
 
+    public static final Logger logger = Logger.getLogger(SudokuGame.class.getName());
+
+    /**
+     * Starting point of the game
+     * @param args args
+     */
     public static void main(String[] args) {
         menuFrame = new MenuFrame();
         menuFrame.setVisible(true);
     }
 
+    /**
+     * Returns the maximum value of the current game
+     * @return Maximum value
+     */
+    public static int getMaxValue() {
+        return gameController.getModel().getBoardDimension().maxValue;
+    }
+
+    /**
+     * Changes screen to game
+     */
     public static void showGame() {
         if (menuFrame.isVisible()) {
             menuFrame.setVisible(false);
@@ -24,6 +45,9 @@ public class SudokuGame {
         }
     }
 
+    /**
+     * Changes screen to menu
+     */
     public static void showMenu() {
         if (gameFrame.isVisible()) {
             gameFrame.setVisible(false);
@@ -31,6 +55,11 @@ public class SudokuGame {
         }
     }
 
+    /**
+     * Creates new game
+     * @param boardDimension Dimension of the new board
+     * @param difficulty Difficulty of the new game
+     */
     public static void newGame(BoardDimension boardDimension, Difficulty difficulty) {
         gameController = new GameController(boardDimension, difficulty);
         gameController.newGame();
@@ -38,6 +67,10 @@ public class SudokuGame {
         showGame();
     }
 
+    /**
+     * Loads the state of a saved game from file
+     * @param file Game save
+     */
     public static void loadGame(File file) {
         GameBoardModel model = null;
         try (FileInputStream fileInputStream = new FileInputStream(file)) {
@@ -46,11 +79,11 @@ public class SudokuGame {
             model = (GameBoardModel) objectInputStream.readObject();
 
         } catch (FileNotFoundException ex) {
-            System.out.println("Load unsuccessful: File not found");
+            logger.info("Load unsuccessful: File not found");
         } catch (IOException ex) {
-            System.out.println("Load unsuccessful: IOException");
+            logger.info("Load unsuccessful: IOException");
         } catch (ClassNotFoundException e) {
-            System.out.println("Load unsuccessful: Class not found");
+            logger.info("Load unsuccessful: Class not found");
         }
 
         if (model != null) {
@@ -58,10 +91,14 @@ public class SudokuGame {
             gameFrame = new GameFrame(gameController.getModel().getBoardDimension(), gameController.getModel().getDifficulty(), gameController.getPanel());
             showGame();
         } else {
-            System.out.println("Load unsuccessful");
+            logger.info("Load unsuccessful");
         }
     }
 
+    /**
+     * Saves the game state to file
+     * @param file Save file
+     */
     public static void saveGame(File file) {
         try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
@@ -69,12 +106,16 @@ public class SudokuGame {
             objectOutputStream.writeObject(gameController.getModel());
 
         } catch (FileNotFoundException ex) {
-            System.out.println("Save unsuccessful: File not found");
+            logger.info("Save unsuccessful: File not found");
         } catch (IOException ex) {
-            System.out.println("Save unsuccessful: IOException");
-            ex.printStackTrace(System.out);
+            logger.info("Save unsuccessful: IOException");
         }
     }
+
+    /**
+     * Checks the given solution to the puzzle
+     * @return Int representing result of the check (0 - empty cells, -1 - invalid, 1 - valid)
+     */
     public static int checkSolution() {
         if(!gameController.isAllCellFilled()) {
             return 0;
@@ -82,9 +123,5 @@ public class SudokuGame {
             return -1;
         }
         return 1;
-    }
-
-    public static int maxValue() {
-        return gameController.getModel().getBoardDimension().maxValue;
     }
 }

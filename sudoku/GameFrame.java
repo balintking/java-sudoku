@@ -16,13 +16,16 @@ import java.nio.file.Paths;
 
 import static java.lang.System.exit;
 
+/**
+ * Frame responsive for displaying one game
+ */
 public class GameFrame extends JFrame implements ActionListener {
-    BoardDimension boardDimension;
-    Difficulty difficulty;
+    private final BoardDimension boardDimension;
+    private final Difficulty difficulty;
     private JMenuItem saveMenuItem;
     private JMenuItem loadMenuItem;
     private JMenuItem newGameMenuItem;
-    JButton checkButton;
+    private JButton checkButton;
 
     /**
      * Constructor that initializes the frame
