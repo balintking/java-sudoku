@@ -13,7 +13,7 @@ public class Cell extends JTextField implements Serializable {
     /**
      * The value stored in the cell
      */
-    private int value;
+    private int initValue;
 
     /**
      * Tells if the value of the cell is given, and so that it can not be edited
@@ -27,12 +27,12 @@ public class Cell extends JTextField implements Serializable {
     /**
      * Constructor for Cell
      *
-     * @param value The value stored in the cell
+     * @param initValue The value stored in the cell
      * @param isGiven Tells if the value of the cell is given, and so that it can not be edited
      */
-    public Cell(int value, boolean isGiven) {
-        super(isGiven ? Integer.toString(value): "", 1);
-        this.value = value;
+    public Cell(int initValue, boolean isGiven) {
+        super(isGiven ? Integer.toString(initValue): "", 1);
+        this.initValue = initValue;
         this.isGiven = isGiven;
         setHorizontalAlignment(SwingConstants.CENTER);
         setPreferredSize(new Dimension(30, 30));
@@ -57,12 +57,12 @@ public class Cell extends JTextField implements Serializable {
     }
 
 
-    public int getValue() {
-        return value;
+    public int getInitValue() {
+        return initValue;
     }
 
-    public void setValue(int value) {
-        this.value = value;
+    public void setInitValue(int initValue) {
+        this.initValue = initValue;
     }
 
     public boolean isGiven() {

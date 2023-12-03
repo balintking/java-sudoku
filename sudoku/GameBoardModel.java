@@ -2,7 +2,6 @@ package sudoku;
 
 import sudoku.GameController.BoardDimension;
 
-import java.awt.event.KeyListener;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -115,7 +114,7 @@ public class GameBoardModel implements Serializable {
         for (int row = 0; row < boardDimension.gridSize; row++) {
             ArrayList<Cell> currentRow = board.get(row);
             for (int col = 0; col < boardDimension.gridSize; col++) {
-                System.out.print(currentRow.get(col).getValue() + " ");
+                System.out.print(currentRow.get(col).getInitValue() + " ");
             }
             System.out.println();
         }
@@ -127,14 +126,15 @@ public class GameBoardModel implements Serializable {
      * @param value Value to be checked
      * @return True if it is present, otherwise false
      */
-    public boolean isValueInRow(int row, int value) {
+    public int countValueInRow(int row, int value) {
+        int count = 0;
         ArrayList<Cell> selectedRow = board.get(row);
         for (int col = 0; col < boardDimension.gridSize; col++) {
-            if (selectedRow.get(col).getValue() == value) {
-                return true;
+            if (!selectedRow.get(col).getText().equals("") && Integer.parseInt(selectedRow.get(col).getText()) == value ) {
+                count++;
             }
         }
-        return false;
+        return count;
     }
 
     /**
@@ -143,14 +143,15 @@ public class GameBoardModel implements Serializable {
      * @param value Value to be checked
      * @return True if it is present, otherwise false
      */
-    public boolean isValueInColumn(int col, int value) {
+    public int countValueInColumn(int col, int value) {
+        int count = 0;
         for (int row = 0; row < boardDimension.gridSize; row++) {
             ArrayList<Cell> currentRow = board.get(row);
-            if (currentRow.get(col).getValue() == value) {
-                return true;
+            if (!currentRow.get(col).getText().equals("") && Integer.parseInt(currentRow.get(col).getText()) == value) {
+                count++;
             }
         }
-        return false;
+        return count;
     }
 
     /**
@@ -160,18 +161,19 @@ public class GameBoardModel implements Serializable {
      * @param value Value to be checked
      * @return True if it is present, otherwise false
      */
-    public boolean isValueInBox(int row, int col, int value) {
+    public int countValueInBox(int row, int col, int value) {
+        int count = 0;
         int localBoxRow = row - (row % boardDimension.boxSize);
         int localBoxCol = col - (col % boardDimension.boxSize);
 
         for (int i = localBoxRow; i < localBoxRow + boardDimension.boxSize; i++) {
             for (int j = localBoxCol; j < localBoxCol + boardDimension.boxSize; j++) {
-                if (getCell(i, j).getValue() == value) {
-                    return true;
+                if (!getCell(i, j).getText().equals("") && Integer.parseInt(getCell(i, j).getText()) == value) {
+                    count++;
                 }
             }
         }
-        return false;
+        return count;
     }
 
     /**
@@ -179,11 +181,12 @@ public class GameBoardModel implements Serializable {
      * @param row Selected row
      * @param col Selected column
      * @param value Value to be checked
+     * @param expected Expected number of occurrence of value in rows, columns, and boxes
      * @return True if the placement is valid, otherwise false
      */
-    public boolean isValidPlacement(int row, int col, int value) {
-        return !isValueInRow(row, value) &&
-                !isValueInColumn(col, value) &&
-                !isValueInBox(row, col, value);
+    public boolean isValidPlacement(int row, int col, int value, int expected) {
+        return countValueInRow(row, value) == expected &&
+                countValueInColumn(col, value) == expected &&
+                countValueInBox(row, col, value) == expected;
     }
 }

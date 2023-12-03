@@ -115,7 +115,7 @@ public class GameController {
             for (int j = 0; j < boxSize; j++) {
                 do {
                     value = randomGenerator(boardDimension.maxValue) + 1;
-                } while (model.isValueInBox(row + i, col + j, value));
+                } while (model.countValueInBox(row + i, col + j, value) > 0);
                 model.setCell(row + i, col + j, new Cell(value, true));
             }
         }
@@ -129,7 +129,7 @@ public class GameController {
             for (int col = 0; col < boardDimension.gridSize; col++) {
                 if (!board.getCell(row, col).isGiven()) {
                     for (int tryValue = 1; tryValue <= boardDimension.maxValue; tryValue++) {
-                        if (board.isValidPlacement(row, col, tryValue)) {
+                        if (board.isValidPlacement(row, col, tryValue, 0)) {
                             board.setCell(row, col, new Cell(tryValue, true));
 
                             if (solveBoard(board)) {
@@ -205,17 +205,34 @@ public class GameController {
         return cellsToRemove;
     }
 
+    /**
+     * Tells if all the cells are filled or there are empty ones
+     * @return True if all cell has a value, otherwise false
+     */
     public boolean isAllCellFilled() {
         ArrayList<Cell> cells = (ArrayList<Cell>) model.getCells();
 
         for (Cell cell: cells) {
-            System.out.print(cell.getText());
             if (cell.getText().equals("")) {
-                System.out.println();
                 return false;
             }
         }
-        System.out.println();
+        return true;
+    }
+
+    /**
+     * Tells if the placement of the values in the table is correct
+     * @return True if all cell has a valid placement
+     */
+    public boolean isBoardValid() {
+        for (int row = 0; row < boardDimension.gridSize; row++) {
+            for (int col = 0; col < boardDimension.gridSize; col++) {
+                int value = Integer.parseInt(model.getCell(row, col).getText());
+                if (!model.isValidPlacement(row, col, value, 1)) {
+                    return false;
+                }
+            }
+        }
         return true;
     }
 }

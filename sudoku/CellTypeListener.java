@@ -22,9 +22,7 @@ public class CellTypeListener implements KeyListener, Serializable {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (SudokuGame.isAllCellFilled()) {
-            System.out.println("full");
-        }
+
     }
 
     @Override

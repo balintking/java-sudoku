@@ -24,6 +24,7 @@ public class GameFrame extends JFrame implements ActionListener {
     private JMenuItem saveMenuItem;
     private JMenuItem loadMenuItem;
     private JMenuItem newGameMenuItem;
+    JButton checkButton;
 
     public GameFrame(BoardDimension boardDimension, Difficulty difficulty, GameBoardPanel panel) {
         super("Sudoku");
@@ -48,7 +49,6 @@ public class GameFrame extends JFrame implements ActionListener {
         add(panel);
 
         JPanel infoPanel = new JPanel();
-        BoxLayout sideLayout = new BoxLayout(infoPanel, BoxLayout.Y_AXIS);
 
         JLabel boardSizeLabel = new JLabel("Grid Size: "+boardDimension.gridSize+"x"+ boardDimension.gridSize);
         JLabel difficultyLabel = new JLabel("Difficulty: "+difficulty);
@@ -56,7 +56,8 @@ public class GameFrame extends JFrame implements ActionListener {
         infoPanel.add(boardSizeLabel);
         infoPanel.add(difficultyLabel);
 
-        JButton checkButton = new JButton("Check Solution");
+        checkButton = new JButton("Check Solution");
+        checkButton.addActionListener(this);
 
         infoPanel.add(checkButton);
 
@@ -134,6 +135,18 @@ public class GameFrame extends JFrame implements ActionListener {
                 }
             } else if (item.equals(newGameMenuItem)) {
                 SudokuGame.showMenu();
+            }
+        } else if (e.getSource().equals(checkButton)) {
+            switch(SudokuGame.checkSolution()) {
+                case -1 -> {
+                    System.out.println("Invalid Solution");
+                }
+                case 0 -> {
+                    System.out.println("Empty cells");
+                }
+                case 1 -> {
+                    System.out.println("Valid Solution");
+                }
             }
         }
     }

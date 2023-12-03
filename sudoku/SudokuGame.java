@@ -75,8 +75,12 @@ public class SudokuGame {
             ex.printStackTrace(System.out);
         }
     }
-
-    public static boolean isAllCellFilled() {
-        return gameController.isAllCellFilled();
+    public static int checkSolution() {
+        if(!gameController.isAllCellFilled()) {
+            return 0;
+        } else if (!gameController.isBoardValid()) {
+            return -1;
+        }
+        return 1;
     }
 }
