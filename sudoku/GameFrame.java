@@ -1,5 +1,9 @@
 package sudoku;
 
+import sudoku.GameController.BoardDimension;
+import sudoku.GameController.Difficulty;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -12,28 +16,51 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class GameFrame extends JFrame implements ActionListener {
+    BoardDimension boardDimension;
+    Difficulty difficulty;
     private JMenuBar menuBar;
     private JMenu fileMenu;
     private JMenu gameMenu;
     private JMenuItem saveMenuItem;
     private JMenuItem loadMenuItem;
     private JMenuItem newGameMenuItem;
-    public GameFrame(GameBoardPanel panel) {
-        super("Sudoku");
-        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        this.setPreferredSize(new Dimension(800, 600));
-        this.setResizable(true);
 
-        //TODO: icon
-        //ImageIcon icon = new ImageIcon("");
-        //this.setIconImage(icon.getImage());
-        init(panel);
+    public GameFrame(BoardDimension boardDimension, Difficulty difficulty, GameBoardPanel panel) {
+        super("Sudoku");
+
+        this.boardDimension = boardDimension;
+        this.difficulty = difficulty;
+
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        this.setPreferredSize(new Dimension(600, 600));
+        this.setResizable(false);
+        setLayout(new FlowLayout());
+
+        ImageIcon icon = new ImageIcon("logo.png");
+        this.setIconImage(icon.getImage());
+
+        initComponents(panel);
+        pack();
     }
 
-    private void init(GameBoardPanel panel) {
+    private void initComponents(GameBoardPanel panel) {
         buildMenuBar();
         add(panel);
-        pack();
+
+        JPanel infoPanel = new JPanel();
+        BoxLayout sideLayout = new BoxLayout(infoPanel, BoxLayout.Y_AXIS);
+
+        JLabel boardSizeLabel = new JLabel("Grid Size: "+boardDimension.gridSize+"x"+ boardDimension.gridSize);
+        JLabel difficultyLabel = new JLabel("Difficulty: "+difficulty);
+
+        infoPanel.add(boardSizeLabel);
+        infoPanel.add(difficultyLabel);
+
+        JButton checkButton = new JButton("Check Solution");
+
+        infoPanel.add(checkButton);
+
+        add(infoPanel);
     }
 
     /**

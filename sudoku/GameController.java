@@ -1,6 +1,7 @@
 package sudoku;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -202,5 +203,19 @@ public class GameController {
         }
 
         return cellsToRemove;
+    }
+
+    public boolean isAllCellFilled() {
+        ArrayList<Cell> cells = (ArrayList<Cell>) model.getCells();
+
+        for (Cell cell: cells) {
+            System.out.print(cell.getText());
+            if (cell.getText().equals("")) {
+                System.out.println();
+                return false;
+            }
+        }
+        System.out.println();
+        return true;
     }
 }

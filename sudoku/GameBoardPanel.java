@@ -18,7 +18,7 @@ public class GameBoardPanel extends JPanel {
         this.boxPanels = new ArrayList<>();
 
         this.setLayout(new GridLayout(boardDimension.boxSize, boardDimension.boxSize));
-        this.setPreferredSize(new Dimension(400, 400));
+        this.setPreferredSize(new Dimension(500, 500));
 
         for (int i = 0; i < boardDimension.boxSize; i++) {
             ArrayList<JPanel> boxRow = new ArrayList<>();

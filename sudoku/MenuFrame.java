@@ -24,10 +24,13 @@ public class MenuFrame extends JFrame implements ActionListener {
     public MenuFrame() {
         super("Sudoku - New Game");
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        this.setPreferredSize(new Dimension(800, 600));
+        this.setPreferredSize(new Dimension(600, 600));
         //getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
-        this.setResizable(true);
+        this.setResizable(false);
+
+        ImageIcon icon = new ImageIcon("logo.png");
+        this.setIconImage(icon.getImage());
 
         initComponents();
         pack();

@@ -2,6 +2,7 @@ package sudoku;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyListener;
 import java.io.Serializable;
 
 /**
@@ -21,6 +22,8 @@ public class Cell extends JTextField implements Serializable {
 
     private static final int GIVEN_COLOR = 0xf2f2fc;
 
+    private static final KeyListener cellTypeListener = new CellTypeListener();
+
     /**
      * Constructor for Cell
      *
@@ -37,6 +40,8 @@ public class Cell extends JTextField implements Serializable {
 
         Font  font  = new Font(Font.SANS_SERIF,  Font.PLAIN, 15);
         setFont(font);
+
+        addKeyListener(cellTypeListener);
 
         if (isGiven()) {
             setEditable(false);

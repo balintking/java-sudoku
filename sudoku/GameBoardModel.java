@@ -2,6 +2,7 @@ package sudoku;
 
 import sudoku.GameController.BoardDimension;
 
+import java.awt.event.KeyListener;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;

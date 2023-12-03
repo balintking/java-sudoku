@@ -34,7 +34,7 @@ public class SudokuGame {
     public static void newGame(BoardDimension boardDimension, Difficulty difficulty) {
         gameController = new GameController(boardDimension, difficulty);
         gameController.newGame();
-        gameFrame = new GameFrame(gameController.getPanel());
+        gameFrame = new GameFrame(gameController.getModel().getBoardDimension(), gameController.getModel().getDifficulty(), gameController.getPanel());
         showGame();
     }
 
@@ -55,7 +55,7 @@ public class SudokuGame {
 
         if (model != null) {
             gameController = new GameController(model);
-            gameFrame = new GameFrame(gameController.getPanel());
+            gameFrame = new GameFrame(gameController.getModel().getBoardDimension(), gameController.getModel().getDifficulty(), gameController.getPanel());
             showGame();
         } else {
             System.out.println("Load unsuccessful");
@@ -74,5 +74,9 @@ public class SudokuGame {
             System.out.println("Save unsuccessful: IOException");
             ex.printStackTrace(System.out);
         }
+    }
+
+    public static boolean isAllCellFilled() {
+        return gameController.isAllCellFilled();
     }
 }
