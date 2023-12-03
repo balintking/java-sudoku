@@ -5,14 +5,14 @@ import java.util.ArrayList;
 import java.util.Random;
 
 /**
- * Controller class responsible for the game logic
+ * Controller class responsible for the logic of one game
  */
 public class GameController {
-    private BoardDimension boardDimension;
-    private Difficulty difficulty;
+    private final BoardDimension boardDimension;
+    private final Difficulty difficulty;
 
-    private GameBoardModel model;
-    private GameBoardPanel panel;
+    private final GameBoardModel model;
+    private final GameBoardPanel panel;
 
     private static final Random random = new Random();
 
@@ -22,9 +22,9 @@ public class GameController {
     public enum BoardDimension implements Serializable {
         SMALL(4, 2), MEDIUM(9, 3), LARGE(16, 4);
 
-        int gridSize;
-        int boxSize;
-        int maxValue;
+        final int gridSize;
+        final int boxSize;
+        final int maxValue;
 
         BoardDimension(int gridSize, int boxSize) {
             this.gridSize = gridSize;
@@ -40,6 +40,11 @@ public class GameController {
         EASY, NORMAL, HARD
     }
 
+    /**
+     * Constructor. Initializes fields
+     * @param boardDimension Dimension of the board
+     * @param difficulty Difficulty of the game
+     */
     public GameController(BoardDimension boardDimension, Difficulty difficulty) {
         this.boardDimension = boardDimension;
         this.difficulty = difficulty;
@@ -61,14 +66,34 @@ public class GameController {
         panel.addCells(model);
     }
 
+    /**
+     * Game board model getter
+     * @return Model
+     */
     public GameBoardModel getModel() {
         return model;
     }
 
+    /**
+     * Game board panel getter
+     * @return Panel
+     */
     public GameBoardPanel getPanel() {
         return panel;
     }
 
+    /**
+     * Generates random int value between 0 and the specified value
+     * @param num Upper bound (exclusive)
+     * @return Random number
+     */
+    public static int randomGenerator(int num) {
+        return random.nextInt(num);
+    }
+
+    /**
+     * Generates new board and adds the generated cells to panel
+     */
     public void newGame() {
         generateBoard();
         panel.addCells(model);
@@ -81,15 +106,6 @@ public class GameController {
         fillDiagonal();
         solveBoard(model);
         removeSomeCells(boardDimension, difficulty);
-    }
-
-    /**
-     * Generates random int value between 0 and the specified value
-     * @param num Upper bound (exclusive)
-     * @return Random number
-     */
-    public static int randomGenerator(int num) {
-        return random.nextInt(num);
     }
 
     /**
@@ -213,7 +229,7 @@ public class GameController {
         ArrayList<Cell> cells = (ArrayList<Cell>) model.getCells();
 
         for (Cell cell: cells) {
-            if (cell.getText().equals("")) {
+            if (cell.getText().isEmpty()) {
                 return false;
             }
         }

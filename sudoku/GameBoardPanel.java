@@ -10,9 +10,13 @@ import java.util.ArrayList;
  * JPanel class that displays a sudoku board
  */
 public class GameBoardPanel extends JPanel {
-    private BoardDimension boardDimension;
-    private ArrayList<ArrayList<JPanel>> boxPanels;
+    private final BoardDimension boardDimension;
+    private final ArrayList<ArrayList<JPanel>> boxPanels;
 
+    /**
+     * Constructor that adds boxes
+     * @param boardDimension Dimension of the board
+     */
     public GameBoardPanel(BoardDimension boardDimension) {
         this.boardDimension = boardDimension;
         this.boxPanels = new ArrayList<>();
@@ -20,6 +24,7 @@ public class GameBoardPanel extends JPanel {
         this.setLayout(new GridLayout(boardDimension.boxSize, boardDimension.boxSize));
         this.setPreferredSize(new Dimension(500, 500));
 
+        //add boxes
         for (int i = 0; i < boardDimension.boxSize; i++) {
             ArrayList<JPanel> boxRow = new ArrayList<>();
             for (int j = 0; j < boardDimension.boxSize; j++) {
@@ -34,6 +39,10 @@ public class GameBoardPanel extends JPanel {
         }
     }
 
+    /**
+     * Adds the cells to the panel from the model
+     * @param model Model containing the cells
+     */
     public void addCells(GameBoardModel model) {
 
         ArrayList<ArrayList<Cell>> cells = (ArrayList<ArrayList<Cell>>) model.getBoard();

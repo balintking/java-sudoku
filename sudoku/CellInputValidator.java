@@ -4,13 +4,16 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.Serializable;
 
-public class CellTypeListener implements KeyListener, Serializable {
+/**
+ * KeyListener that validates the cell inputs
+ */
+public class CellInputValidator implements KeyListener, Serializable {
     @Override
     public void keyTyped(KeyEvent e) {
         Cell cell = (Cell) e.getSource();
         char c = e.getKeyChar();
 
-        switch (SudokuGame.maxValue()) {
+        switch (SudokuGame.getMaxValue()) {
             case 4 -> {
                 if (c < '1' || c > '4') {
                     e.consume();

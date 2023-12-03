@@ -9,17 +9,22 @@ import java.util.List;
 import static sudoku.GameController.*;
 
 /**
- * Model storing the actual state of the board
+ * Model storing the current state of the board
  */
 public class GameBoardModel implements Serializable {
     private final BoardDimension boardDimension;
     private final Difficulty difficulty;
 
     /**
-     * 2-dimensional ArrayList, where the cells are stored
+     * 2-dimensional ArrayList storing the cells
      */
-    private ArrayList<ArrayList<Cell>> board;
+    private final ArrayList<ArrayList<Cell>> board;
 
+    /**
+     * Constructor that fills the board with blank cells
+     * @param boardDimension Dimension of the board
+     * @param difficulty Difficulty of the board
+     */
     public GameBoardModel(BoardDimension boardDimension, Difficulty difficulty) {
         this.boardDimension = boardDimension;
         this.difficulty = difficulty;
@@ -37,34 +42,27 @@ public class GameBoardModel implements Serializable {
     }
 
     /**
-     * Copy Constructor
-     *
-     * @param board2     The board to copy
+     * Returns the dimension of the board
+     * @return Dimension
      */
-    public GameBoardModel(GameBoardModel board2) {
-        this.boardDimension = board2.boardDimension;
-        this.difficulty = board2.difficulty;
-        this.board = new ArrayList<>();
-
-        for (int row = 0; row < boardDimension.gridSize; row++) {
-            ArrayList<Cell> currentRow = board2.board.get(row);
-            ArrayList<Cell> newRow = new ArrayList<>();
-
-            for (int col = 0; col < boardDimension.gridSize; col++) {
-                Cell currentCell = currentRow.get(col);
-
-                newRow.add(currentCell);
-            }
-            board.add(newRow);
-        }
-    }
-
     public BoardDimension getBoardDimension() {
         return boardDimension;
     }
 
+    /**
+     * Returns the difficulty of the board
+     * @return Dimension
+     */
     public Difficulty getDifficulty() {
         return difficulty;
+    }
+
+    /**
+     * Returns the board
+     * @return board
+     */
+    public List<ArrayList<Cell>> getBoard() {
+        return board;
     }
 
     /**
@@ -79,7 +77,6 @@ public class GameBoardModel implements Serializable {
 
     /**
      * Sets the cell in a specified position to the specified cell
-     *
      * @param row Row at which the cell is to be set
      * @param col Column at which the cell is to be set
      * @param cell Cell to be set
@@ -88,10 +85,6 @@ public class GameBoardModel implements Serializable {
         ArrayList<Cell> selectedRow = board.get(row);
         selectedRow.set(col, cell);
         board.set(row, selectedRow);
-    }
-
-    public List<ArrayList<Cell>> getBoard() {
-        return board;
     }
 
     /**
@@ -108,29 +101,16 @@ public class GameBoardModel implements Serializable {
     }
 
     /**
-     * Prints the current state of the model to the console (for developer purposes only)
-     */
-    public void print() {
-        for (int row = 0; row < boardDimension.gridSize; row++) {
-            ArrayList<Cell> currentRow = board.get(row);
-            for (int col = 0; col < boardDimension.gridSize; col++) {
-                System.out.print(currentRow.get(col).getInitValue() + " ");
-            }
-            System.out.println();
-        }
-    }
-
-    /**
-     * Checks if the given value is present in the row
+     * Counts how many cells are in the row with the given value
      * @param row Selected row
      * @param value Value to be checked
-     * @return True if it is present, otherwise false
+     * @return Number of occurrence
      */
     public int countValueInRow(int row, int value) {
         int count = 0;
         ArrayList<Cell> selectedRow = board.get(row);
         for (int col = 0; col < boardDimension.gridSize; col++) {
-            if (!selectedRow.get(col).getText().equals("") && Integer.parseInt(selectedRow.get(col).getText()) == value ) {
+            if (!selectedRow.get(col).getText().isEmpty() && Integer.parseInt(selectedRow.get(col).getText()) == value ) {
                 count++;
             }
         }
@@ -138,16 +118,16 @@ public class GameBoardModel implements Serializable {
     }
 
     /**
-     * Checks if the given value is present in the column
+     * Counts how many cells are in the column with the given value
      * @param col Selected column
      * @param value Value to be checked
-     * @return True if it is present, otherwise false
+     * @return Number of occurrence
      */
     public int countValueInColumn(int col, int value) {
         int count = 0;
         for (int row = 0; row < boardDimension.gridSize; row++) {
             ArrayList<Cell> currentRow = board.get(row);
-            if (!currentRow.get(col).getText().equals("") && Integer.parseInt(currentRow.get(col).getText()) == value) {
+            if (!currentRow.get(col).getText().isEmpty() && Integer.parseInt(currentRow.get(col).getText()) == value) {
                 count++;
             }
         }
@@ -155,11 +135,11 @@ public class GameBoardModel implements Serializable {
     }
 
     /**
-     * Checks if the given value is present in the box
-     * @param row Starting row of the box
-     * @param col Starting column of the box
+     * Counts how many cells are in the box with the given value
+     * @param row Selected row
+     * @param col Selected column
      * @param value Value to be checked
-     * @return True if it is present, otherwise false
+     * @return Number of occurrence
      */
     public int countValueInBox(int row, int col, int value) {
         int count = 0;
@@ -168,7 +148,7 @@ public class GameBoardModel implements Serializable {
 
         for (int i = localBoxRow; i < localBoxRow + boardDimension.boxSize; i++) {
             for (int j = localBoxCol; j < localBoxCol + boardDimension.boxSize; j++) {
-                if (!getCell(i, j).getText().equals("") && Integer.parseInt(getCell(i, j).getText()) == value) {
+                if (!getCell(i, j).getText().isEmpty() && Integer.parseInt(getCell(i, j).getText()) == value) {
                     count++;
                 }
             }
@@ -181,7 +161,7 @@ public class GameBoardModel implements Serializable {
      * @param row Selected row
      * @param col Selected column
      * @param value Value to be checked
-     * @param expected Expected number of occurrence of value in rows, columns, and boxes
+     * @param expected Expected number of occurrence of the value in rows, columns, and boxes
      * @return True if the placement is valid, otherwise false
      */
     public boolean isValidPlacement(int row, int col, int value, int expected) {

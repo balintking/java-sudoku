@@ -7,25 +7,26 @@ import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 import static sudoku.GameController.*;
+import static sudoku.GameFrame.initFileChooser;
 
+/**
+ * Frame responsive for displaying menu
+ */
 public class MenuFrame extends JFrame implements ActionListener {
-    JComboBox<BoardDimension> dimensionSelect;
-    JComboBox<Difficulty> difficultySelect;
-    JButton newGameButton;
-    private JMenuBar menuBar;
-    private JMenu fileMenu;
+    private JComboBox<BoardDimension> dimensionSelect;
+    private JComboBox<Difficulty> difficultySelect;
+    private JButton newGameButton;
     private JMenuItem loadMenuItem;
 
+    /**
+     * Constructor that initializes the frame
+     */
     public MenuFrame() {
         super("Sudoku - New Game");
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setPreferredSize(new Dimension(600, 600));
-        //getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         this.setResizable(false);
 
@@ -36,6 +37,9 @@ public class MenuFrame extends JFrame implements ActionListener {
         pack();
     }
 
+    /**
+     * Adds the components to the frame
+     */
     private void initComponents() {
 
         buildMenuBar();
@@ -77,10 +81,10 @@ public class MenuFrame extends JFrame implements ActionListener {
      * Builds the menu bar on top of the frame
      */
     private void buildMenuBar() {
-        menuBar = new JMenuBar();
+        JMenuBar menuBar = new JMenuBar();
 
         //File
-        fileMenu = new JMenu("File");
+        JMenu fileMenu = new JMenu("File");
 
         loadMenuItem = new JMenuItem("Load Game");
         loadMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, InputEvent.META_DOWN_MASK));
@@ -93,19 +97,19 @@ public class MenuFrame extends JFrame implements ActionListener {
         this.setJMenuBar(menuBar);
     }
 
+    /**
+     * Action handling
+     * @param e the event to be processed
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
+        //new game
         if (e.getSource().equals(newGameButton)) {
             SudokuGame.newGame((BoardDimension) dimensionSelect.getSelectedItem(), (Difficulty) difficultySelect.getSelectedItem());
-        } else if (e.getSource().equals(loadMenuItem)) {
-            JFileChooser fileChooser = new JFileChooser();
-            File saveDir = null;
-            try {
-                saveDir = Files.createDirectories(Paths.get("./savefiles")).toFile();
-            } catch (IOException ex) {
-                System.out.println("Save unsuccessful: IOException");
-            }
-            fileChooser.setCurrentDirectory(saveDir);
+        }
+        //load
+        else if (e.getSource().equals(loadMenuItem)) {
+            JFileChooser fileChooser =  initFileChooser();
             int response = fileChooser.showOpenDialog(null);
 
             if (response == JFileChooser.APPROVE_OPTION) {
