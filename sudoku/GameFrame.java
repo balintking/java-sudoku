@@ -15,6 +15,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import static java.lang.System.exit;
+
 public class GameFrame extends JFrame implements ActionListener {
     BoardDimension boardDimension;
     Difficulty difficulty;
@@ -139,13 +141,24 @@ public class GameFrame extends JFrame implements ActionListener {
         } else if (e.getSource().equals(checkButton)) {
             switch(SudokuGame.checkSolution()) {
                 case -1 -> {
-                    System.out.println("Invalid Solution");
+                    //Wrong Solution
+                    JOptionPane.showMessageDialog(null, "Uh-oh! The solution is not valid. Keep refining your Sudoku skills!", "Wrong Solution", JOptionPane.ERROR_MESSAGE);
                 }
                 case 0 -> {
-                    System.out.println("Empty cells");
+                    //Incomplete Board
+                    JOptionPane.showMessageDialog(null, "You have to fill in all cells.", "Incomplete Board", JOptionPane.WARNING_MESSAGE);
                 }
                 case 1 -> {
-                    System.out.println("Valid Solution");
+                    //Puzzle Solved
+                    int answer = JOptionPane.showConfirmDialog(null, "Victory! The Sudoku puzzle has been triumphantly solved. How about another game?", "Puzzle Solved", JOptionPane.YES_NO_CANCEL_OPTION);
+                    switch (answer) {
+                        case 0 -> //new game
+                                SudokuGame.showMenu();
+                        case 1 -> //exit
+                                exit(0);
+                        default -> { //do nothing
+                        }
+                    }
                 }
             }
         }
