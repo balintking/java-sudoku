@@ -10,23 +10,49 @@ public class CellTypeListener implements KeyListener, Serializable {
         Cell cell = (Cell) e.getSource();
         char c = e.getKeyChar();
 
-        //TODO: 16 validation
-        if (!Character.isDigit(c) || c == '0') {
-            e.consume();
-            return;
-        }
-        if (!cell.isGiven()) {
-            cell.setText("");
+        switch (SudokuGame.maxValue()) {
+            case 4 -> {
+                if (c < '1' || c > '4') {
+                    e.consume();
+                    return;
+                }
+
+                if (!cell.isGiven()) {
+                    cell.setText("");
+                }
+            }
+            case 16 -> {
+                if (cell.getText().equals("1")) {
+                    if (c < '0' || c > '6') {
+                        e.consume();
+                    }
+                } else if (c < '1' || c > '9') {
+                    e.consume();
+                } else if (!cell.isGiven()) {
+                    cell.setText("");
+                }
+            }
+            default -> {                            //case 9
+                if (c < '1' || c > '9') {
+                    e.consume();
+                    return;
+                }
+
+                if (!cell.isGiven()) {
+                    cell.setText("");
+                }
+            }
         }
     }
 
+
     @Override
     public void keyPressed(KeyEvent e) {
-
+        //not used
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-
+        // not used
     }
 }

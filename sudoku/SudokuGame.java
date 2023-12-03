@@ -83,4 +83,8 @@ public class SudokuGame {
         }
         return 1;
     }
+
+    public static int maxValue() {
+        return gameController.getModel().getBoardDimension().maxValue;
+    }
 }
