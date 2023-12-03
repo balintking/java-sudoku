@@ -135,7 +135,6 @@ public class GameController {
      */
     private void removeSomeCells(BoardDimension boardDimension, Difficulty difficulty) {
         int cellsToRemove = calculateCellsToRemove(boardDimension, difficulty);
-        System.out.println(cellsToRemove);
 
         while (cellsToRemove > 0) {
             int randomRow = random.nextInt(boardDimension.gridSize);
