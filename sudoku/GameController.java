@@ -104,15 +104,11 @@ public class GameController {
      */
     private void generateBoard() {
         fillDiagonal();
-        model.print();
         if(!solveBoard(model)) {
-            System.out.println("rebuild");
             model = new GameBoardModel(boardDimension, difficulty);
             generateBoard();
         } else {
-            model.print();
             removeSomeCells(boardDimension, difficulty);
-            model.print();
         }
     }
 
@@ -121,7 +117,6 @@ public class GameController {
      */
     private void fillDiagonal() {
         for (int i = 0; i < boardDimension.gridSize; i = i + boardDimension.boxSize)
-
             // diagonal box start coordinates i==j
             fillBox(i, i, boardDimension.boxSize);
     }
@@ -158,7 +153,6 @@ public class GameController {
                         //valid
                         if (board.isValidPlacement(row, col, tryValue, 0)) {
                             board.setCell(row, col, new Cell(tryValue, true));
-                            board.print();
                             if (solveBoard(board)) {
                                 return true;
                             } else {
@@ -180,8 +174,6 @@ public class GameController {
      */
     private void removeSomeCells(BoardDimension boardDimension, Difficulty difficulty) {
         int cellsToRemove = calculateCellsToRemove(boardDimension, difficulty);
-
-        System.out.println(cellsToRemove+" removed");
 
         while (cellsToRemove > 0) {
             int randomRow = random.nextInt(boardDimension.gridSize);
