@@ -11,7 +11,7 @@ public class GameController {
     private final BoardDimension boardDimension;
     private final Difficulty difficulty;
 
-    private final GameBoardModel model;
+    private GameBoardModel model;
     private final GameBoardPanel panel;
 
     private static final Random random = new Random();
@@ -104,8 +104,16 @@ public class GameController {
      */
     private void generateBoard() {
         fillDiagonal();
-        solveBoard(model);
-        removeSomeCells(boardDimension, difficulty);
+        model.print();
+        if(!solveBoard(model)) {
+            System.out.println("rebuild");
+            model = new GameBoardModel(boardDimension, difficulty);
+            generateBoard();
+        } else {
+            model.print();
+            removeSomeCells(boardDimension, difficulty);
+            model.print();
+        }
     }
 
     /**
@@ -143,11 +151,14 @@ public class GameController {
     private boolean solveBoard(GameBoardModel board) {
         for (int row = 0; row < boardDimension.gridSize; row++) {
             for (int col = 0; col < boardDimension.gridSize; col++) {
+                //empty cell
                 if (!board.getCell(row, col).isGiven()) {
+                    //try values
                     for (int tryValue = 1; tryValue <= boardDimension.maxValue; tryValue++) {
+                        //valid
                         if (board.isValidPlacement(row, col, tryValue, 0)) {
                             board.setCell(row, col, new Cell(tryValue, true));
-
+                            board.print();
                             if (solveBoard(board)) {
                                 return true;
                             } else {
@@ -169,6 +180,8 @@ public class GameController {
      */
     private void removeSomeCells(BoardDimension boardDimension, Difficulty difficulty) {
         int cellsToRemove = calculateCellsToRemove(boardDimension, difficulty);
+
+        System.out.println(cellsToRemove+" removed");
 
         while (cellsToRemove > 0) {
             int randomRow = random.nextInt(boardDimension.gridSize);
@@ -197,23 +210,23 @@ public class GameController {
         switch (boardDimension) {
             case SMALL -> {
                 switch (difficulty) {
-                    case EASY -> cellsToRemove = randomGenerator(4) + 8;
-                    case NORMAL -> cellsToRemove = randomGenerator(4) + 4;
-                    case HARD -> cellsToRemove = randomGenerator(4) + 5;
+                    case EASY -> cellsToRemove = randomGenerator(4) + 4;
+                    case NORMAL -> cellsToRemove = randomGenerator(4) + 5;
+                    case HARD -> cellsToRemove = randomGenerator(4) + 8;
                 }
             }
             case MEDIUM -> {
                 switch (difficulty) {
-                    case EASY -> cellsToRemove = randomGenerator(11) + 30;
-                    case NORMAL -> cellsToRemove = randomGenerator(11) + 20;
-                    case HARD -> cellsToRemove = randomGenerator(11) + 15;
+                    case EASY -> cellsToRemove = randomGenerator(11) + 15;
+                    case NORMAL -> cellsToRemove = randomGenerator(11) + 25;
+                    case HARD -> cellsToRemove = randomGenerator(11) + 35;
                 }
             }
             case LARGE -> {
                 switch (difficulty) {
-                    case EASY -> cellsToRemove = randomGenerator(31) + 80;
-                    case NORMAL -> cellsToRemove = randomGenerator(31) + 50;
-                    case HARD -> cellsToRemove = randomGenerator(31) + 40;
+                    case EASY -> cellsToRemove = randomGenerator(31) + 40;
+                    case NORMAL -> cellsToRemove = randomGenerator(31) + 60;
+                    case HARD -> cellsToRemove = randomGenerator(31) + 90;
                 }
             }
         }

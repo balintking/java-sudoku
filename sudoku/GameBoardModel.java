@@ -101,6 +101,24 @@ public class GameBoardModel implements Serializable {
     }
 
     /**
+     * Prints the current state of the model to the console (for developer purposes only)
+     */
+    public void print() {
+        for (int row = 0; row < boardDimension.gridSize; row++) {
+            ArrayList<Cell> currentRow = board.get(row);
+            for (int col = 0; col < boardDimension.gridSize; col++) {
+                System.out.print(currentRow.get(col).getText());
+                if (currentRow.get(col).getText().isEmpty()) {
+                    System.out.print(" ");
+                }
+                System.out.print(" ");
+            }
+            System.out.println();
+        }
+        System.out.println("--------");
+    }
+
+    /**
      * Counts how many cells are in the row with the given value
      * @param row Selected row
      * @param value Value to be checked
