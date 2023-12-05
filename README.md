@@ -5,7 +5,7 @@ Sudoku desktop application in Java
 > 
 > Author: Bálint Király
 
-## About the Game
+# About the Game
 
 ### Description
 Sudoku, also known as Su Doku, popular form of number game. In its simplest and most common configuration, sudoku consists of a 9 × 9 grid with numbers appearing in some of the squares. The object of the puzzle is to fill the remaining squares, using all the numbers 1–9 exactly once in each row, column, and the nine 3 × 3 subgrids. Sudoku is based entirely on logic, without any arithmetic involved, and the level of difficulty is determined by the quantity and positions of the original numbers. The puzzle, however, raised interesting combinatorial problems for mathematicians, two of whom proved in 2005 that there are 6,670,903,752,021,072,936,960 possible sudoku grids.
@@ -16,7 +16,7 @@ My version of the game closely follows the original with the addition of several
 
 
 
-At the beginning Players have the option to set game modes in a menu.
+At the beginning the Player have the option to set game modes in a menu.
 
 There are three grid sizes:
 - 6x6
@@ -30,8 +30,46 @@ Three difficulty levels are available for selection:
 
 The chosen difficulty level affects the number of pre-filled cells in the puzzle. 
 
-Once the player has made their selections, the game board loads based on the chosen grid size and difficulty level. The board is then ready for the player to solve.
+Once the player has made their selections, the game board will be generated based on the chosen grid size and difficulty level. The board is ready for the player to solve.
 
 During the game player can save the game and load it back at any time.
 
-## Getting Started
+# Getting Started
+
+# User Guide
+
+## Starting the game
+
+### Creating a New Game
+
+1. Select your preferred board size (`small`, `medium`, `large`).
+2. Choose the difficulty level (`easy`, `normal`, `hard`).
+3. Click on `New Game` to start the game.
+
+### Loading a Saved Game
+1. Press `Cmd + L` or select _File > Load_ from the menu bar.
+2. Choose a previously saved game file.
+
+## Gameplay
+
+The board consists of pre-filled and blank cells. Pre-filled cells are colored and cannot be edited. Fill in all blank cells with valid numbers; the game prevents entry of invalid values.
+
+Save your game state anytime with `cmd + S` or _File > Save_.
+
+Load a saved game using `cmd + L` or _File > Load_.
+
+To start a new game, use `cmd + N` or _Game > New Game_ from the menu bar.
+
+## Checking Your Solution
+
+After completing the game, verify your solution by clicking `Check Solution` at the bottom of the window.
+
+The game will inform you if the solution is correct. If so, you can start a new game directly from the dialog box.
+
+## Keyboard Shortcuts
+
+`Cmd + N`: Create a new game.
+
+`Cmd + S`: Save the game.
+
+`Cmd + L`: Load a saved game.
