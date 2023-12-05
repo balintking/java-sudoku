@@ -21,8 +21,6 @@ Sudoku, also known as Su Doku, popular form of number game. In its simplest and 
 ### My version
 My version of the game closely follows the original with the addition of several customizable features to enhance the player's experience.
 
-
-
 At the beginning the Player have the option to set game modes in a menu.
 
 There are three grid sizes:
@@ -43,7 +41,26 @@ During the game player can save the game and load it back at any time.
 
 # Getting Started
 
+Make sure you have Java installed on your system.
 
+Compile code:
+
+```bash
+javac -d ./build ./src/sudoku/*.java
+```
+
+Compile code:
+
+```bash
+cd ./build
+java sudoku.SudokuGame
+cd ..
+```
+
+### Alternatively you can run the .jar file
+(Please note that the .jar file might not be updated to the latest version)
+
+You can find the .jar file in `out/artifacts/java_sudoku_jar` directory.
 
 # User Guide
 
