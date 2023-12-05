@@ -8,7 +8,7 @@ import java.util.logging.Logger;
  * Main class
  */
 public class SudokuGame {
-    private static JFrame menuFrame;
+    private static final JFrame menuFrame = new MenuFrame();
     private static JFrame gameFrame;
 
     private static GameController gameController;
@@ -20,7 +20,6 @@ public class SudokuGame {
      * @param args args
      */
     public static void main(String[] args) {
-        menuFrame = new MenuFrame();
         menuFrame.setVisible(true);
     }
 
