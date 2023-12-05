@@ -1,5 +1,7 @@
 package sudoku;
 
+import sudoku.GameController.*;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -7,9 +9,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
-
-import static sudoku.GameController.*;
-import static sudoku.GameFrame.initFileChooser;
 
 /**
  * Frame responsive for displaying menu
@@ -109,7 +108,7 @@ public class MenuFrame extends JFrame implements ActionListener {
         }
         //load
         else if (e.getSource().equals(loadMenuItem)) {
-            JFileChooser fileChooser =  initFileChooser();
+            JFileChooser fileChooser =  GameFrame.initFileChooser();
             int response = fileChooser.showOpenDialog(null);
 
             if (response == JFileChooser.APPROVE_OPTION) {

@@ -23,7 +23,7 @@ public class Cell extends JTextField implements Serializable {
     private static final KeyListener cellTypeListener = new CellInputValidator();
 
     /**
-     * Constructor for Cell
+     * Constructor for sudoku.Cell
      * @param initValue The value stored in the cell
      * @param isGiven Tells if the value of the cell is given, and so that it can not be edited
      */

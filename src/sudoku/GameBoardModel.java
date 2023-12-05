@@ -1,12 +1,11 @@
 package sudoku;
 
-import sudoku.GameController.BoardDimension;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import static sudoku.GameController.*;
+
 
 /**
  * Model storing the current state of the board
@@ -79,7 +78,7 @@ public class GameBoardModel implements Serializable {
      * Sets the cell in a specified position to the specified cell
      * @param row Row at which the cell is to be set
      * @param col Column at which the cell is to be set
-     * @param cell Cell to be set
+     * @param cell sudoku.Cell to be set
      */
     public void setCell(int row, int col, Cell cell) {
         ArrayList<Cell> selectedRow = board.get(row);

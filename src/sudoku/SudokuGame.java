@@ -1,8 +1,5 @@
 package sudoku;
 
-import sudoku.GameController.BoardDimension;
-import sudoku.GameController.Difficulty;
-
 import javax.swing.*;
 import java.io.*;
 import java.util.logging.Logger;
@@ -60,7 +57,7 @@ public class SudokuGame {
      * @param boardDimension Dimension of the new board
      * @param difficulty Difficulty of the new game
      */
-    public static void newGame(BoardDimension boardDimension, Difficulty difficulty) {
+    public static void newGame(GameController.BoardDimension boardDimension, GameController.Difficulty difficulty) {
         gameController = new GameController(boardDimension, difficulty);
         gameController.newGame();
         gameFrame = new GameFrame(gameController.getModel().getBoardDimension(), gameController.getModel().getDifficulty(), gameController.getPanel());
