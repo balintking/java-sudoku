@@ -4,6 +4,13 @@ Sudoku desktop application in Java
 > This project was developed for the Programming 3 course at BME.
 > 
 > Author: Bálint Király
+ 
+# Overview
+
+- [About the Game](#About-the-Game)
+- [Getting Started](#Getting-Started)
+- [User Guide](#User-Guide)
+- [Documentation](#Documentation)
 
 # About the Game
 
@@ -35,6 +42,8 @@ Once the player has made their selections, the game board will be generated base
 During the game player can save the game and load it back at any time.
 
 # Getting Started
+
+
 
 # User Guide
 
@@ -73,3 +82,18 @@ The game will inform you if the solution is correct. If so, you can start a new 
 `Cmd + S`: Save the game.
 
 `Cmd + L`: Load a saved game.
+
+
+# Documentation
+
+Run this script to open documentation:
+
+```bash
+open ./documentation/sudoku/package-summary.html
+```
+
+Run this script to open class diagram:
+
+```bash
+open ./documentation/diagram.png
+```
