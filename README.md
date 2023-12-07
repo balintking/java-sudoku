@@ -43,24 +43,26 @@ During the game player can save the game and load it back at any time.
 
 Make sure you have Java installed on your system.
 
-Compile code:
+Compile:
 
 ```bash
 javac -d ./build ./src/sudoku/*.java
 ```
 
-Compile code:
+Run:
 
 ```bash
-cd ./build
-java sudoku.SudokuGame
-cd ..
+java -cp ./build sudoku.SudokuGame
 ```
 
 ### Alternatively you can run the .jar file
 (Please note that the .jar file might not be updated to the latest version)
 
 You can find the .jar file in `out/artifacts/java_sudoku_jar` directory.
+
+```bash
+java -jar ./out/artifacts/java_sudoku_jar/java-sudoku.jar
+```
 
 # User Guide
 
